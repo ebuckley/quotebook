@@ -1,10 +1,11 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-			<h1 class="heading">Login</h1>
+			<h1 class="heading">Register</h1>
 			<form>
-					<div class='form-group' ng-if="user">
-						<p class="navbar-text">Hello {{user.username}}</p>
+					<div class="form-group" ng-if="!user">
+						<label for="username">username</label>
+						<input class="form-control" type="username" ng-required placeholder="username" ng-model="credentials.username"></input>
 					</div>
 					<div class="form-group" ng-if="!user">
 						<label for="email">Email</label>
@@ -14,8 +15,7 @@
 						<label for="password">Password</label>
 						<input class="form-control" type="password" ng-required placeholder="password" ng-model="credentials.password"></input>
 					</div>
-					<button class="btn btn-primary" ng-click="login()" ng-disabled="!!pendingLogin">Log in</button>
-					<button class="btn btn-default" ui-sref="register">Register</button>
+					<button class="btn btn-default" ng-click="doRegister()" ng-disabled="pending">Sign me up!</button>
 			</form>
 		</div>
 	</div>

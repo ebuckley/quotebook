@@ -1,0 +1,10 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="quote-box" ng-repeat="quote in quotes | orderBy: '-createdAt'">
+				<div class="quote-content">{{quote.content}}</div>
+				<div class="quote-date">{{quote.createdAt | date: short}}</div>
+			</div>
+		</div>
+	</div>
+</div>

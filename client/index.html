@@ -2,6 +2,10 @@
 <html ng-app="quoteBook">
 <head>
 	<title>QuoteBook App</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<!-- 
+	TODO enable when needed
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.css"> -->
 	<style type="text/css">
 		@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|PT+Serif);
 		body {
@@ -28,34 +32,38 @@
 	</style>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-route.js"></script>
+
+	<!--  
+	TODO enable or remove
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.js"></script>
+	-->
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
 	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-resource.js"></script>
 </head>
-<body>
-	<div ng-controller="mainCtrl">
+<body ng-controller="mainCtrl">
 
-		<div ng-if="user">
-			Hello {{user.username}}
-			<button ng-click='logout()'>Logout</button>
-			<hr/>
-
-			<div class='quote-list'>
-				<div class="quote-box" ng-repeat="quote in quotes | orderBy: '-createdAt'">
-					<div class="quote-content">{{quote.content}}</div>
-					<div class="quote-date">{{quote.createdAt | date: short}}</div>
-				</div>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">QuoteBook</a>
 			</div>
-		</div>
+			<p ng-if="user" class="navbar-text">of {{user.username}}</p>
+			
+			<ul class="nav navbar-nav navbar-right">
+				<li><a ui-sref="list">List</a></li>
+				<li><a href="#">Add</a></li>
+				<li>
+					<a href='#' ng-if="user" ng-click='logout()'>Logout</a>
+					<a ui-sref="login" ng-if="!user">Login</a>
+				</li>
+			</ul>
+		</div><!-- /.container-fluid -->
+	</nav>
 
-		<!-- not logged in case -->
-		<div ng-if="!user">
-			<input type="email" ng-required placeholder="email" ng-model="credentials.email"></input>
-			<input type="password" ng-required placeholder="password" ng-model="credentials.password"></input>
-			<button ng-click="login()" ng-disabled="!!pendingLogin">GO</button>
-			<br/>
-			<!-- <a href="/register">Register</a> -->
-		</div>
-	</div>
+	<section ui-view></section>
+
 		
 	<script type="text/javascript" src="/js/services/lb-services.js"></script>
 	<script type="text/javascript" src="/js/app.js"></script>
