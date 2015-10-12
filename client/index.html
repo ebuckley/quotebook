@@ -2,6 +2,31 @@
 <html ng-app="quoteBook">
 <head>
 	<title>QuoteBook App</title>
+	<style type="text/css">
+		@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|PT+Serif);
+		body {
+			font-family: 'PT Serif', serif;
+		}
+		button {
+			font-family: 'Open Sans Condensed', sans-serif;
+		}
+		.quote-list {
+			width: 980px;
+			margin: 0 auto 0;
+		}
+		.quote-box {
+			padding: 20px 0;
+		}
+		.quote-content {
+			font-size: 1.5em;
+		}
+		.quote-date {
+			font-size: 0.65em;
+			font-weight: 300;
+			font-family: 'Open Sans Condensed', sans-serif;
+		}
+	</style>
+
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-route.js"></script>
 	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-resource.js"></script>
@@ -14,9 +39,11 @@
 			<button ng-click='logout()'>Logout</button>
 			<hr/>
 
-			<div ng-repeat="quote in quotes">
-				<span ng-if="$empty">Loading Quotes..</span>
-				<pre>{quote | json}</pre>
+			<div class='quote-list'>
+				<div class="quote-box" ng-repeat="quote in quotes | orderBy: '-createdAt'">
+					<div class="quote-content">{{quote.content}}</div>
+					<div class="quote-date">{{quote.createdAt | date: short}}</div>
+				</div>
 			</div>
 		</div>
 
@@ -26,16 +53,8 @@
 			<input type="password" ng-required placeholder="password" ng-model="credentials.password"></input>
 			<button ng-click="login()" ng-disabled="!!pendingLogin">GO</button>
 			<br/>
-			<label>REMEMBER ME</label><input type="checkbox" ng-model="rememberMe"></input>
-			<br/>
 			<!-- <a href="/register">Register</a> -->
 		</div>
-
-		<h2 class="sub">Debug stuffs</h2>
-		user:
-		<pre>{{user | json}}</pre>
-		token:
-		<pre>{{token | json}}</pre>
 	</div>
 		
 	<script type="text/javascript" src="/js/services/lb-services.js"></script>
