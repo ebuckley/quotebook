@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="quoteBook">
+<head>
+	<title>QuoteBook App</title>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-route.js"></script>
+	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-resource.js"></script>
+</head>
+<body>
+	<div ng-controller="mainCtrl">
+
+		<div ng-if="user">
+			Hello {{user.username}}
+			<button ng-click='logout()'>Logout</button>
+			<hr/>
+
+			<div ng-repeat="quote in quotes">
+				<span ng-if="$empty">Loading Quotes..</span>
+				<pre>{quote | json}</pre>
+			</div>
+		</div>
+
+		<!-- not logged in case -->
+		<div ng-if="!user">
+			<input type="email" ng-required placeholder="email" ng-model="credentials.email"></input>
+			<input type="password" ng-required placeholder="password" ng-model="credentials.password"></input>
+			<button ng-click="login()" ng-disabled="!!pendingLogin">GO</button>
+			<br/>
+			<label>REMEMBER ME</label><input type="checkbox" ng-model="rememberMe"></input>
+			<br/>
+			<!-- <a href="/register">Register</a> -->
+		</div>
+
+		<h2 class="sub">Debug stuffs</h2>
+		user:
+		<pre>{{user | json}}</pre>
+		token:
+		<pre>{{token | json}}</pre>
+	</div>
+		
+	<script type="text/javascript" src="/js/services/lb-services.js"></script>
+	<script type="text/javascript" src="/js/app.js"></script>
+</body>
+</html>
