@@ -1,6 +1,6 @@
 (function (window, angular) {
 	'use strict';
-	angular.module('quoteBook', ['lbServices', 'ui.router'])
+	angular.module('quoteBook', ['lbServices', 'ui.router', 'ui.bootstrap'])
 	.config(function ($stateProvider) {
 		$stateProvider.state('login', {
 			url:'/login',
@@ -19,6 +19,48 @@
 			templateUrl: '/views/register.html',
 			controller: 'registerCtrl'
 		});
+	})
+	.factory('QuoteStore', function ($rootScope, Quote, User) {
+
+		var listeners = {};
+
+		var state = {
+			quotes: []
+		};
+
+		function getQuotes() {
+			return User.quotes({ id: User.getCurrentId() },
+				function (success) {
+					console.log('got quotes', success);
+					state.quotes = success;
+					$rootScope.$broadcast('quotes.update', success)
+				}, function (err) {
+					console.log('error getting quotes', err);
+				});
+		}
+
+		getQuotes();
+
+		return {
+
+			add: function  (quoteModel) {
+				quoteModel.userId = User.getCurrentId();
+				quoteModel.createdAt = (new Date()).toISOString();
+				quoteModel.isDeleted = false;
+
+				if (!quoteModel.content) throw new Error('quote should have content');
+
+				return Quote.create(quoteModel).$promise.then(function (success) {
+					getQuotes(); // update quotes model
+					return success;
+				}, function  (err) {
+					console.log('error creating quote', err);
+				});
+			},
+			getAll: function () {
+				return state.quotes;
+			}
+		}
 	})
 	.controller('loginCtrl', function ($scope, User, $state) {
 		if (User.isAuthenticated()) {
@@ -60,21 +102,25 @@
 
 		};
 	})
-	.controller('listCtrl', function ($scope, User, $state) {
+	.controller('listCtrl', function ($scope, QuoteStore, User, $state) {
 
 		if (!User.isAuthenticated()) {
 			$state.go('login');
 		}
 
-		User.quotes({ id: User.getCurrentId() },
-			function (success) {
-				console.log('got quotes', success);
-				$scope.quotes = success;
-			}, function (err) {
-				console.log('error getting quotes', err);
-			});
+		$scope.model = {};
+		$scope.model.quotes = QuoteStore.getAll();
+
+		var quoteUpdater = $scope.$on('quotes.update', function (evt, quotes) {
+			$scope.model.quotes = quotes;
+		});
+
+		$scope.$on('$destroy', function  () {
+			quoteUpdater(); //deregister the quote updater after controller scope is destroyed
+		})
+
 	})
-	.controller('mainCtrl', function ($scope, User, $state) {
+	.controller('mainCtrl', function ($scope, User, $state, $uibModal) {
 
 		if (User.isAuthenticated()) {
 			$state.go('list')
@@ -101,6 +147,30 @@
 				$state.go('login');
 			}
 		});
+
+		$scope.add = function  () {
+			var modalInstance = $uibModal.open({
+				animation: true,
+				templateUrl: '/views/add-modal.html',
+				controller: function ($scope, $modalInstance, QuoteStore) {
+					$scope.ok = function  () {
+						QuoteStore.add({
+							content: $scope.content.text
+						})
+						.then(function  () {
+							$modalInstance.close();
+						}, function (err) {
+							console.log('error creating quote');
+						});
+					};
+					$scope.cancel = function  () {
+						$modalInstance.dismiss();
+					};
+				},
+				size: 'lg',
+				resolve: {}
+			});
+		};
 
 		$scope.logout = function () {
 			User.logout({},

@@ -3,9 +3,7 @@
 <head>
 	<title>QuoteBook App</title>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<!-- 
-	TODO enable when needed
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.css"> -->
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.css">
 	<style type="text/css">
 		@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|PT+Serif);
 		body {
@@ -32,11 +30,7 @@
 	</style>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-
-	<!--  
-	TODO enable or remove
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.js"></script>
-	-->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.1/ui-bootstrap-tpls.js"></script>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
 	<script type="text/javascript" src="//code.angularjs.org/1.4.7/angular-resource.js"></script>
@@ -53,7 +47,7 @@
 			
 			<ul class="nav navbar-nav navbar-right">
 				<li><a ui-sref="list">List</a></li>
-				<li><a href="#">Add</a></li>
+				<li><a href='#' ng-click="add()">Add</a></li>
 				<li>
 					<a href='#' ng-if="user" ng-click='logout()'>Logout</a>
 					<a ui-sref="login" ng-if="!user">Login</a>
